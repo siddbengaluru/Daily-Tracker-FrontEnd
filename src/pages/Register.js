@@ -23,56 +23,65 @@ const Register = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
-        <Paper elevation={3} sx={{ p: 4, width: '100%' }}>
-          <Typography variant="h5" align="center" gutterBottom>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        background: 'linear-gradient(to right, rgb(255,245,247), rgb(255,230,240))',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        p: 2,
+      }}
+    >
+      <Paper elevation={4} sx={{ p: 5, width: '100%', maxWidth: 450 }}>
+        <Typography variant="h5" align="center" gutterBottom>
+          Create Your Account
+        </Typography>
+  
+        {message.text && (
+          <Alert severity={message.type} sx={{ mb: 2 }}>
+            {message.text}
+          </Alert>
+        )}
+  
+        <form onSubmit={handleRegister}>
+          <TextField
+            label="Username"
+            name="username"
+            fullWidth
+            margin="normal"
+            value={formData.username}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            label="Email"
+            name="email"
+            fullWidth
+            margin="normal"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            label="Password"
+            name="password"
+            type="password"
+            fullWidth
+            margin="normal"
+            value={formData.password}
+            onChange={handleChange}
+            required
+          />
+          <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
             Register
-          </Typography>
-
-          {message.text && (
-            <Alert severity={message.type} sx={{ mb: 2 }}>
-              {message.text}
-            </Alert>
-          )}
-
-          <form onSubmit={handleRegister}>
-            <TextField
-              label="Username"
-              name="username"
-              fullWidth
-              margin="normal"
-              value={formData.username}
-              onChange={handleChange}
-              required
-            />
-            <TextField
-              label="Email"
-              name="email"
-              fullWidth
-              margin="normal"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-            <TextField
-              label="Password"
-              name="password"
-              type="password"
-              fullWidth
-              margin="normal"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-            <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
-              Register
-            </Button>
-          </form>
-        </Paper>
-      </Box>
-    </Container>
+          </Button>
+        </form>
+      </Paper>
+    </Box>
   );
+  
+      
 };
 
 export default Register;
