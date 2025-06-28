@@ -6,49 +6,62 @@ import {
   Paper,
   TextField,
   Typography,
+  Alert,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Register = () => {
-  const [form, setForm] = useState({ username: '', email: '', password: '' });
+  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+  const [message, setMessage] = useState({ type: '', text: '' });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Replace with API call
-    console.log('Registered user:', form);
+    try {
+      const res = await axios.post('http://localhost:8080/api/auth/register', formData);
+      setMessage({ type: 'success', text: res.data });
+      setTimeout(() => navigate('/login'), 2000); // redirect to login after 2 sec
+    } catch (err) {
+      setMessage({ type: 'error', text: err.response?.data || 'Registration failed.' });
+    }
   };
 
   return (
     <Box
       sx={{
-        backgroundColor: '#ffe6e6', // Soft pink
+        background: 'linear-gradient(to right, #ffe0ec, #fce4ec)', // Soft pink background
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
       }}
     >
       <Container maxWidth="sm">
-        <Paper elevation={6} sx={{ p: 4, borderRadius: 3 }}>
-          <Typography
-            variant="h4"
-            align="center"
-            gutterBottom
-            sx={{ color: '#d63384', fontWeight: 'bold' }}
-          >
-            Register
-          </Typography>
+        <Paper elevation={5} sx={{ p: 4, borderRadius: 3 }}>
+          <Box textAlign="center" mb={2}>
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/747/747310.png"
+              alt="calendar"
+              width="50"
+              style={{ marginBottom: 8 }}
+            />
+            <Typography variant="h5" fontWeight="bold">
+              Daily Tracker
+            </Typography>
+            <Typography variant="subtitle1" color="text.secondary">
+              Create your account
+            </Typography>
+          </Box>
 
-          <Typography
-            variant="subtitle1"
-            align="center"
-            sx={{ color: '#888', mb: 2 }}
-          >
-            Create your account to get started
-          </Typography>
+          {message.text && (
+            <Alert severity={message.type} sx={{ mb: 2 }}>
+              {message.text}
+            </Alert>
+          )}
 
           <form onSubmit={handleSubmit}>
             <TextField
@@ -57,16 +70,8 @@ const Register = () => {
               fullWidth
               required
               margin="normal"
-              value={form.username}
+              value={formData.username}
               onChange={handleChange}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#d63384',
-                    boxShadow: '0 0 0 2px rgba(214, 51, 132, 0.2)',
-                  },
-                },
-              }}
             />
             <TextField
               label="Email"
@@ -75,16 +80,8 @@ const Register = () => {
               fullWidth
               required
               margin="normal"
-              value={form.email}
+              value={formData.email}
               onChange={handleChange}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#d63384',
-                    boxShadow: '0 0 0 2px rgba(214, 51, 132, 0.2)',
-                  },
-                },
-              }}
             />
             <TextField
               label="Password"
@@ -93,16 +90,8 @@ const Register = () => {
               fullWidth
               required
               margin="normal"
-              value={form.password}
+              value={formData.password}
               onChange={handleChange}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '&.Mui-focused fieldset': {
-                    borderColor: '#d63384',
-                    boxShadow: '0 0 0 2px rgba(214, 51, 132, 0.2)',
-                  },
-                },
-              }}
             />
             <Button
               type="submit"
@@ -110,11 +99,11 @@ const Register = () => {
               variant="contained"
               sx={{
                 mt: 3,
-                backgroundColor: '#d63384',
+                backgroundColor: '#d81b60',
                 '&:hover': {
-                  backgroundColor: '#c2185b',
+                  backgroundColor: '#ad1457',
                   transform: 'scale(1.02)',
-                  transition: 'transform 0.2s ease-in-out',
+                  transition: '0.2s ease-in-out',
                 },
               }}
             >
@@ -128,7 +117,7 @@ const Register = () => {
             sx={{ mt: 2, color: '#333' }}
           >
             Already have an account?{' '}
-            <Link to="/login" style={{ color: '#d63384', textDecoration: 'none' }}>
+            <Link to="/login" style={{ color: '#d81b60', textDecoration: 'none' }}>
               Login here
             </Link>
           </Typography>
