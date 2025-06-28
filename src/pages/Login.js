@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import {
   Box,
-  Paper,
-  Typography,
-  TextField,
   Button,
+  Container,
+  Paper,
+  TextField,
+  Typography,
   Alert,
 } from '@mui/material';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -23,7 +25,8 @@ const Login = () => {
     try {
       const res = await axios.post('http://localhost:8080/api/auth/login', credentials);
       setError('');
-      alert(res.data);
+      sessionStorage.setItem('username', credentials.username);
+      navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data || 'Login failed');
     }
@@ -32,68 +35,108 @@ const Login = () => {
   return (
     <Box
       sx={{
+        background: 'linear-gradient(to right, #e3eaf2, #f2f4f7)',
         minHeight: '100vh',
-        background: 'linear-gradient(to right, #f1f3f6, #e2e8f0)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        p: 2,
+        px: 2,
       }}
     >
-      <Paper elevation={6} sx={{ p: 5, width: '100%', maxWidth: 400 }}>
-        <Box textAlign="center" mb={2}>
-          <img src="/calendar-icon.png" alt="icon" width={50} />
-          <Typography variant="h5" gutterBottom sx={{ mt: 1 }}>
-            Daily Tracker
-          </Typography>
-          <Typography variant="subtitle1" color="text.secondary">
-            Login
-          </Typography>
-        </Box>
+      <Container maxWidth="sm">
+        <Paper elevation={6} sx={{ p: 4, borderRadius: 3 }}>
+          <Box textAlign="center" mb={3}>
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/747/747310.png"
+              alt="calendar icon"
+              width="60"
+              style={{ marginBottom: 8 }}
+            />
+            <Typography variant="h5" fontWeight="bold" gutterBottom>
+              Daily Tracker
+            </Typography>
+            <Typography variant="subtitle1" color="text.secondary">
+              Login to continue
+            </Typography>
+          </Box>
 
-        {error && (
-          <Alert severity="error" sx={{ mb: 2 }}>
-            {error}
-          </Alert>
-        )}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
 
-        <form onSubmit={handleSubmit}>
-          <TextField
-            label="Username"
-            name="username"
-            fullWidth
-            margin="normal"
-            onChange={handleChange}
-            value={credentials.username}
-            required
-          />
-          <TextField
-            label="Password"
-            name="password"
-            type="password"
-            fullWidth
-            margin="normal"
-            onChange={handleChange}
-            value={credentials.password}
-            required
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            sx={{ mt: 2 }}
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Username"
+              name="username"
+              fullWidth
+              required
+              margin="normal"
+              value={credentials.username}
+              onChange={handleChange}
+              autoComplete="username"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#1976d2',
+                    boxShadow: '0 0 0 2px rgba(25, 118, 210, 0.2)',
+                  },
+                },
+              }}
+            />
+            <TextField
+              label="Password"
+              name="password"
+              type="password"
+              fullWidth
+              required
+              margin="normal"
+              value={credentials.password}
+              onChange={handleChange}
+              autoComplete="current-password"
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#1976d2',
+                    boxShadow: '0 0 0 2px rgba(25, 118, 210, 0.2)',
+                  },
+                },
+              }}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{
+                mt: 3,
+                backgroundColor: '#1976d2',
+                '&:hover': {
+                  backgroundColor: '#1565c0',
+                  transform: 'scale(1.02)',
+                  boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+                },
+              }}
+            >
+              Login
+            </Button>
+          </form>
+
+          <Typography
+            variant="body2"
+            align="center"
+            sx={{ mt: 2, color: '#555' }}
           >
-            Login
-          </Button>
-        </form>
-
-        <Typography variant="body2" align="center" sx={{ mt: 2 }}>
-          Don&apos;t have an account?{' '}
-          <Link to="/register" style={{ color: '#1976d2', textDecoration: 'none' }}>
-            Register here
-          </Link>
-        </Typography>
-      </Paper>
+            Don’t have an account?{' '}
+            <Link
+              to="/register"
+              style={{ color: '#1976d2', fontWeight: 500, textDecoration: 'none' }}
+            >
+              Register here
+            </Link>
+          </Typography>
+        </Paper>
+      </Container>
     </Box>
   );
 };
