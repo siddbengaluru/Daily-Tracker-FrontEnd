@@ -1,87 +1,141 @@
 import React, { useState } from 'react';
 import {
-  Container, TextField, Button, Typography, Box, Paper, Alert,
+  Box,
+  Button,
+  Container,
+  Paper,
+  TextField,
+  Typography,
 } from '@mui/material';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
-  const [formData, setFormData] = useState({ username: '', password: '', email: '' });
-  const [message, setMessage] = useState({ type: '', text: '' });
+  const [form, setForm] = useState({ username: '', email: '', password: '' });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleRegister = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      const res = await axios.post('http://localhost:8080/api/auth/register', formData);
-      setMessage({ type: 'success', text: res.data });
-    } catch (err) {
-      setMessage({ type: 'error', text: err.response?.data || 'Registration failed.' });
-    }
+    // TODO: Replace with API call
+    console.log('Registered user:', form);
   };
 
   return (
     <Box
       sx={{
+        backgroundColor: '#ffe6e6', // Soft pink
         minHeight: '100vh',
-        background: 'linear-gradient(to right, rgb(255,245,247), rgb(255,230,240))',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
-        p: 2,
       }}
     >
-      <Paper elevation={4} sx={{ p: 5, width: '100%', maxWidth: 450 }}>
-        <Typography variant="h5" align="center" gutterBottom>
-          Create Your Account
-        </Typography>
-  
-        {message.text && (
-          <Alert severity={message.type} sx={{ mb: 2 }}>
-            {message.text}
-          </Alert>
-        )}
-  
-        <form onSubmit={handleRegister}>
-          <TextField
-            label="Username"
-            name="username"
-            fullWidth
-            margin="normal"
-            value={formData.username}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            label="Email"
-            name="email"
-            fullWidth
-            margin="normal"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <TextField
-            label="Password"
-            name="password"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+      <Container maxWidth="sm">
+        <Paper elevation={6} sx={{ p: 4, borderRadius: 3 }}>
+          <Typography
+            variant="h4"
+            align="center"
+            gutterBottom
+            sx={{ color: '#d63384', fontWeight: 'bold' }}
+          >
             Register
-          </Button>
-        </form>
-      </Paper>
+          </Typography>
+
+          <Typography
+            variant="subtitle1"
+            align="center"
+            sx={{ color: '#888', mb: 2 }}
+          >
+            Create your account to get started
+          </Typography>
+
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Username"
+              name="username"
+              fullWidth
+              required
+              margin="normal"
+              value={form.username}
+              onChange={handleChange}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#d63384',
+                    boxShadow: '0 0 0 2px rgba(214, 51, 132, 0.2)',
+                  },
+                },
+              }}
+            />
+            <TextField
+              label="Email"
+              name="email"
+              type="email"
+              fullWidth
+              required
+              margin="normal"
+              value={form.email}
+              onChange={handleChange}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#d63384',
+                    boxShadow: '0 0 0 2px rgba(214, 51, 132, 0.2)',
+                  },
+                },
+              }}
+            />
+            <TextField
+              label="Password"
+              name="password"
+              type="password"
+              fullWidth
+              required
+              margin="normal"
+              value={form.password}
+              onChange={handleChange}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#d63384',
+                    boxShadow: '0 0 0 2px rgba(214, 51, 132, 0.2)',
+                  },
+                },
+              }}
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{
+                mt: 3,
+                backgroundColor: '#d63384',
+                '&:hover': {
+                  backgroundColor: '#c2185b',
+                  transform: 'scale(1.02)',
+                  transition: 'transform 0.2s ease-in-out',
+                },
+              }}
+            >
+              Register
+            </Button>
+          </form>
+
+          <Typography
+            variant="body2"
+            align="center"
+            sx={{ mt: 2, color: '#333' }}
+          >
+            Already have an account?{' '}
+            <Link to="/login" style={{ color: '#d63384', textDecoration: 'none' }}>
+              Login here
+            </Link>
+          </Typography>
+        </Paper>
+      </Container>
     </Box>
   );
-  
-      
 };
 
 export default Register;
